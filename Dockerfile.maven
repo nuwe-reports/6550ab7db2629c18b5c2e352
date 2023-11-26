@@ -1,0 +1,30 @@
+# Imagen base para la fase de construcción
+FROM maven:3.8.4-openjdk-11 AS builder
+
+# Establece el directorio de trabajo en la aplicación
+WORKDIR /app
+
+# Copia el archivo POM y los archivos de origen
+COPY pom.xml .
+COPY src ./src
+
+# Ejecuta las pruebas (si las pruebas fallan, la construcción se detendrá aquí)
+RUN mvn clean test
+
+# Continúa con la construcción de la aplicación
+RUN mvn clean package
+
+# Imagen final para la ejecución
+FROM openjdk:11-jre-slim
+
+# Establece el directorio de trabajo en la aplicación
+WORKDIR /app
+
+# Copia el JAR construido desde la imagen de compilación
+COPY --from=builder /app/target/demo.jar ./app.jar
+
+# Expone el puerto en el que se ejecuta la aplicación
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación al iniciar el contenedor
+CMD ["java", "-jar", "app.jar"]

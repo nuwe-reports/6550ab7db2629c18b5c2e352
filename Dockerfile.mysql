@@ -1,0 +1,20 @@
+# Imagen base para la fase de construcción
+FROM mysql:8.0 AS builder
+
+# Variables de entorno para la configuración de la base de datos
+ENV MYSQL_DATABASE=accwe-hospital
+ENV MYSQL_ROOT_PASSWORD=root
+
+# Copia el script SQL para inicializar la base de datos
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# En esta etapa, no necesitamos más. La imagen de MySQL se construirá y ejecutará automáticamente.
+
+# Imagen final para la ejecución
+FROM mysql:8.0
+
+# Copia el resultado de la fase de construcción anterior
+COPY --from=builder / /
+
+# Exponer el puerto MySQL (si es necesario)
+EXPOSE 3306
