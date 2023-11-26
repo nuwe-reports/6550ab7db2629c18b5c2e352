@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,5 +151,8 @@ class AppointmentControllerUnitTest {
     void shouldGetNoAppointments() throws Exception {
         // devolve una lista vacía......
         List<Appointment> appointments = new ArrayList<>();
-        when(appointmentRepository.findAll()).thenReturn
+        when(appointmentRepository.findAll()).thenReturn(appointments);
 
+        
+    }
+}
